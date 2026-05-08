@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const stonesContainer = document.getElementById('stones-catalog');
     const accessoriesContainer = document.getElementById('accessories-catalog');
-    const whatsappNumber = "5583999907543";
+    const whatsappNumber = "5583999486999";
 
     // GSAP Initialization
     gsap.registerPlugin(ScrollTrigger);

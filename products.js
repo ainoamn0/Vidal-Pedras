@@ -8,7 +8,7 @@ const products = [
         benefits: "Limpeza energética, aterramento e proteção contra radiação eletromagnética.",
         price: "45,00",
         images: [
-            "https://images.unsplash.com/photo-1551376347-075b0121a65b?auto=format&fit=crop&q=80&w=800",
+            "turmalina.png",
             "https://images.unsplash.com/photo-1590548784585-643d2b9f2912?auto=format&fit=crop&q=80&w=800"
         ]
     },
