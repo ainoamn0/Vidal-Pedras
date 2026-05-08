@@ -152,6 +152,35 @@ document.addEventListener('DOMContentLoaded', () => {
     renderSection('pedra', stonesContainer);
     renderSection('acessorio', accessoriesContainer);
 
+    // Mobile Menu Toggle Logic
+    const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+    const navLinks = document.querySelector('.nav-links');
+    const mobileOverlay = document.getElementById('mobile-overlay');
+    const allNavLinks = document.querySelectorAll('.nav-links a');
+
+    function toggleMenu() {
+        mobileMenuToggle.classList.toggle('active');
+        navLinks.classList.toggle('active');
+        mobileOverlay.classList.toggle('active');
+        document.body.style.overflow = navLinks.classList.contains('active') ? 'hidden' : '';
+    }
+
+    if (mobileMenuToggle) {
+        mobileMenuToggle.addEventListener('click', toggleMenu);
+    }
+
+    if (mobileOverlay) {
+        mobileOverlay.addEventListener('click', toggleMenu);
+    }
+
+    allNavLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            if (navLinks.classList.contains('active')) {
+                toggleMenu();
+            }
+        });
+    });
+
     // Mouse Parallax
     document.addEventListener('mousemove', (e) => {
         const x = (e.clientX / window.innerWidth) - 0.5;
