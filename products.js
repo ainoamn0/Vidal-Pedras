@@ -34,7 +34,7 @@ const products = [
         benefits: "Cura emocional, repele energias negativas e substitui por vibrações amorosas.",
         price: "35,00",
         images: [
-            "https://images.unsplash.com/photo-1614702050041-6946c4872241?auto=format&fit=crop&q=80&w=800",
+            "quartzo rosa.png",
             "https://images.unsplash.com/photo-1567653418876-5bb0e566e1c2?auto=format&fit=crop&q=80&w=800"
         ]
     },

@@ -2,6 +2,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const stonesContainer = document.getElementById('stones-catalog');
     const accessoriesContainer = document.getElementById('accessories-catalog');
     const whatsappNumber = "5583999486999";
+    
+    let currentModalImages = [];
+    let currentModalImageIndex = 0;
 
     // GSAP Initialization
     gsap.registerPlugin(ScrollTrigger);
@@ -80,6 +83,35 @@ document.addEventListener('DOMContentLoaded', () => {
         nextBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             updateSlider(currentImageIndex + 1);
+        });
+
+        // Modal functionality
+        images.forEach((img, index) => {
+            img.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const modal = document.getElementById('product-modal');
+                const modalImg = document.getElementById('modal-image');
+                const modalCategory = document.getElementById('modal-category');
+                const modalTitle = document.getElementById('modal-title');
+                const modalDesc = document.getElementById('modal-description');
+                const modalPrice = document.getElementById('modal-price');
+                const modalWhatsapp = document.getElementById('modal-whatsapp');
+
+                if(modal) {
+                    currentModalImages = product.images;
+                    currentModalImageIndex = index;
+                    modalImg.src = currentModalImages[currentModalImageIndex];
+
+                    modalCategory.textContent = product.category;
+                    modalTitle.textContent = product.name;
+                    modalDesc.textContent = product.description;
+                    modalPrice.textContent = `R$ ${product.price}`;
+                    modalWhatsapp.href = whatsappLink;
+
+                    modal.classList.add('active');
+                    document.body.style.overflow = 'hidden'; // Prevent scrolling
+                }
+            });
         });
 
         // Edit functionality (for the current active image)
@@ -194,4 +226,44 @@ document.addEventListener('DOMContentLoaded', () => {
             stagger: 0.05
         });
     });
+
+    // Modal Close Logic
+    const modal = document.getElementById('product-modal');
+    if (modal) {
+        const closeModal = document.querySelector('.close-modal');
+        closeModal.addEventListener('click', () => {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                modal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+
+        // Modal Slider Logic
+        const modalPrevBtn = document.getElementById('modal-prev');
+        const modalNextBtn = document.getElementById('modal-next');
+        const modalImg = document.getElementById('modal-image');
+
+        if (modalPrevBtn && modalNextBtn && modalImg) {
+            modalPrevBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (currentModalImages.length > 0) {
+                    currentModalImageIndex = (currentModalImageIndex - 1 + currentModalImages.length) % currentModalImages.length;
+                    modalImg.src = currentModalImages[currentModalImageIndex];
+                }
+            });
+
+            modalNextBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (currentModalImages.length > 0) {
+                    currentModalImageIndex = (currentModalImageIndex + 1) % currentModalImages.length;
+                    modalImg.src = currentModalImages[currentModalImageIndex];
+                }
+            });
+        }
+    }
 });
