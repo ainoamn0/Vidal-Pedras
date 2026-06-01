@@ -6,6 +6,18 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentModalImages = [];
     let currentModalImageIndex = 0;
 
+    // ── Carregar produtos salvos no localStorage (substitui products.js se existir) ──
+    const savedProducts = localStorage.getItem('vidal_products');
+    if (savedProducts) {
+        try {
+            const parsed = JSON.parse(savedProducts);
+            if (Array.isArray(parsed) && parsed.length > 0) {
+                products.length = 0;
+                parsed.forEach(p => products.push(p));
+            }
+        } catch(e) { console.warn('Erro ao carregar produtos salvos:', e); }
+    }
+
     // GSAP Initialization
     gsap.registerPlugin(ScrollTrigger);
 
@@ -411,47 +423,38 @@ document.addEventListener('DOMContentLoaded', () => {
         closeAdminModal('github-config-modal');
     });
 
-    // 6. Sincronização 100% Automática em Segundo Plano
+    // 6. Salvar localmente + sincronizar com GitHub (opcional, em silêncio)
     async function autoSyncWithGithub() {
+        // ── PASSO 1: Salvar no localStorage IMEDIATAMENTE ──
+        localStorage.setItem('vidal_products', JSON.stringify(products));
+
+        // ── PASSO 2: Tentar sincronizar com GitHub em segundo plano (silencioso) ──
         const token = localStorage.getItem('gh-token');
         const owner = localStorage.getItem('gh-owner');
-        const repo = localStorage.getItem('gh-repo');
+        const repo  = localStorage.getItem('gh-repo');
         const branch = localStorage.getItem('gh-branch') || 'main';
 
-        if (!token || !owner || !repo) {
-            showToast("⚠️ Sincronização pendente. Configure o GitHub!", "error", 6000);
-            return;
-        }
-
-        const infoToast = showToast("Sincronizando com o site em segundo plano...", "info", 30000);
+        // Se GitHub não configurado, não mostra nada — produto já está salvo localmente
+        if (!token || !owner || !repo) return;
 
         try {
-            // Formatar o array products (global)
             const jsonString = JSON.stringify(products, null, 4);
             const jsContent = `const products = ${jsonString};\n`;
-
-            // Codificar em Base64 UTF-8
             const encodedContent = btoa(unescape(encodeURIComponent(jsContent)));
             const path = 'products.js';
             const url = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
-            
-            // 1. Obter SHA atual
+
             let sha = null;
             const getRes = await fetch(`${url}?ref=${branch}`, {
-                headers: {
-                    'Authorization': `token ${token}`,
-                    'Accept': 'application/vnd.github.v3+json'
-                }
+                headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
             });
-            
             if (getRes.ok) {
                 const getJson = await getRes.json();
                 sha = getJson.sha;
             }
 
-            // 2. Fazer PUT com novo conteúdo
             const putData = {
-                message: "Atualizar catálogo de produtos via Admin Integrado",
+                message: "Atualizar catálogo via Admin Integrado",
                 content: encodedContent,
                 branch: branch
             };
@@ -467,19 +470,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify(putData)
             });
 
-            infoToast.remove(); // Limpa notificação de carregamento
-
-            if (!putRes.ok) {
-                const errData = await putRes.json();
-                throw new Error(errData.message || 'Erro ao sincronizar');
+            if (putRes.ok) {
+                showToast("☁️ Sincronizado com o GitHub!", "success", 4000);
             }
-
-            showToast("✅ Loja salva! O site se atualizará em até 2 minutos.", "success", 6000);
-
         } catch (err) {
-            console.error(err);
-            infoToast.remove();
-            showToast(`❌ Erro de sincronização: ${err.message}`, "error", 6000);
+            // Falha silenciosa — produto já está salvo no navegador
+            console.warn('GitHub sync falhou (silencioso):', err.message);
         }
     }
 
