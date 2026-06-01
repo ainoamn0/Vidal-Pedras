@@ -3,7 +3,7 @@
 
 <head>
 
-    <link rel="icon" href="./logopequena.jpg">
+    <link rel="icon" href="./favicon.png" type="image/png">
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -47,6 +47,7 @@
             <a href="#pedras">Pedras</a>
             <a href="#acessorios">Acessórios</a>
             <a href="#sobre">Sobre</a>
+            <a href="#" id="admin-login-btn">Entrar</a>
         </div>
         <a href="https://wa.me/5583999486999" class="btn btn-outline nav-whatsapp"
             style="padding: 10px 25px; font-size: 0.8rem;">WhatsApp</a>
@@ -158,6 +159,169 @@
             </div>
         </div>
     </div>
+
+    <!-- Admin Interface Elements -->
+    <div id="admin-control-bar" class="admin-control-bar">
+        <div class="admin-bar-content">
+            <span class="admin-badge">👑 Modo Administrador Ativo</span>
+            <div class="admin-bar-actions">
+                <button class="btn-admin" id="admin-new-btn">➕ Novo Produto</button>
+                <button class="btn-admin" id="admin-table-btn">📊 Tabela Geral</button>
+                <button class="btn-admin" id="admin-gh-btn">⚙️ Configurar GitHub</button>
+                <button class="btn-admin logout" id="admin-logout-btn">🚪 Sair</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Login Admin -->
+    <div id="login-modal" class="modal-admin">
+        <div class="modal-admin-content login-box">
+            <span class="close-admin-modal" id="close-login-btn">&times;</span>
+            <h2>Acesso Administrativo</h2>
+            <p class="modal-subtitle">Insira suas credenciais para gerenciar a loja.</p>
+            <form id="login-form">
+                <div class="form-group-admin">
+                    <label for="login-email">E-mail *</label>
+                    <input type="email" id="login-email" required placeholder="Seu e-mail">
+                </div>
+                <div class="form-group-admin">
+                    <label for="login-cpf">CPF *</label>
+                    <input type="text" id="login-cpf" required placeholder="000.000.000-00" maxlength="14">
+                </div>
+                <div class="form-group-admin">
+                    <label for="login-password">Senha *</label>
+                    <input type="password" id="login-password" required placeholder="Sua senha">
+                </div>
+
+                <button type="submit" class="btn-admin-submit">Entrar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Formulário Produto Admin (Adicionar / Editar) -->
+    <div id="product-admin-modal" class="modal-admin">
+        <div class="modal-admin-content product-form-box">
+            <span class="close-admin-modal" id="close-product-admin-btn">&times;</span>
+            <h2 id="product-modal-title">Adicionar Produto</h2>
+            <form id="product-admin-form">
+                <input type="hidden" id="product-admin-id">
+                
+                <div class="form-group-admin">
+                    <label for="product-admin-name">Nome do Produto *</label>
+                    <input type="text" id="product-admin-name" required placeholder="Ex: Turmalina Negra">
+                </div>
+                
+                <div class="form-row-admin">
+                    <div class="form-group-admin">
+                        <label for="product-admin-type">Tipo *</label>
+                        <select id="product-admin-type" required>
+                            <option value="pedra">Pedra Natural</option>
+                            <option value="acessorio">Acessório</option>
+                        </select>
+                    </div>
+                    <div class="form-group-admin">
+                        <label for="product-admin-price">Preço (R$)</label>
+                        <input type="text" id="product-admin-price" placeholder="Ex: 45,00 (Opcional - Sob Consulta)">
+                    </div>
+                </div>
+
+                <!-- Accordion / Seção Retrátil para Informações Opcionais -->
+                <div class="collapsible-container">
+                    <button type="button" class="collapsible-trigger" id="collapsible-trigger">
+                        <span>✨ Detalhes Adicionais (Opcional)</span>
+                        <span class="collapsible-icon">▼</span>
+                    </button>
+                    <div class="collapsible-content" id="collapsible-content">
+                        <div class="form-group-admin">
+                            <label for="product-admin-category">Categoria</label>
+                            <input type="text" id="product-admin-category" placeholder="Ex: Proteção, Colares (Opcional)">
+                        </div>
+                        <div class="form-group-admin">
+                            <label for="product-admin-description">Descrição</label>
+                            <textarea id="product-admin-description" rows="2" placeholder="Descreva a pedra ou acessório (Opcional)"></textarea>
+                         </div>
+                         <div class="form-group-admin">
+                            <label for="product-admin-benefits">Benefícios</label>
+                            <textarea id="product-admin-benefits" rows="2" placeholder="Ex: Limpeza energética (Opcional)"></textarea>
+                         </div>
+                    </div>
+                </div>
+
+                <div class="form-group-admin" style="margin-top: 15px;">
+                    <label for="product-admin-images">URLs das Imagens (Separadas por vírgula)</label>
+                    <textarea id="product-admin-images" rows="1" placeholder="URL 1, URL 2... (Opcional)"></textarea>
+                    
+                    <label style="margin-top: 10px; display: block; font-weight: 500;">Ou escolha fotos do Celular/Galeria:</label>
+                    <input type="file" id="product-admin-file-input" accept="image/*" multiple style="margin-top: 5px; width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 8px;">
+                    <div id="admin-image-preview" class="image-preview-grid"></div>
+                    <small style="display: block; margin-top: 8px;">A primeira imagem será a principal. É recomendado adicionar pelo menos duas imagens.</small>
+                </div>
+
+                <div class="modal-admin-footer">
+                    <button type="button" class="btn-admin-secondary" id="cancel-product-admin-btn">Cancelar</button>
+                    <button type="submit" class="btn-admin-submit-inner">Salvar Produto</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Configurações do GitHub -->
+    <div id="github-config-modal" class="modal-admin">
+        <div class="modal-admin-content config-box">
+            <span class="close-admin-modal" id="close-github-config-btn">&times;</span>
+            <h2>Configurações do GitHub</h2>
+            <p class="modal-subtitle">Para salvar as alterações no site automaticamente. Fica salvo apenas no seu navegador.</p>
+            <form id="github-admin-form">
+                <div class="form-group-admin">
+                    <label for="gh-admin-token">Personal Access Token (PAT) *</label>
+                    <input type="password" id="gh-admin-token" required placeholder="Ex: ghp_xxxxxxxxxxxxxxxxxxxx">
+                </div>
+                <div class="form-group-admin">
+                    <label for="gh-admin-owner">Usuário do GitHub *</label>
+                    <input type="text" id="gh-admin-owner" required placeholder="Ex: aiasp">
+                </div>
+                <div class="form-group-admin">
+                    <label for="gh-admin-repo">Nome do Repositório *</label>
+                    <input type="text" id="gh-admin-repo" required placeholder="Ex: am-atelie">
+                </div>
+                <div class="form-group-admin">
+                    <label for="gh-admin-branch">Branch principal *</label>
+                    <input type="text" id="gh-admin-branch" required value="main">
+                </div>
+                <button type="submit" class="btn-admin-submit">Salvar Configurações</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Tabela Geral de Produtos -->
+    <div id="table-general-modal" class="modal-admin">
+        <div class="modal-admin-content table-box">
+            <span class="close-admin-modal" id="close-table-general-btn">&times;</span>
+            <h2>Todos os Produtos Cadastrados</h2>
+            <p class="modal-subtitle">Gerenciamento consolidado de produtos.</p>
+            <div class="table-container-admin">
+                <table id="products-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Imagem</th>
+                            <th>Nome</th>
+                            <th>Tipo</th>
+                            <th>Categoria</th>
+                            <th>Preço</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="products-tbody">
+                        <!-- Renderizado dinamicamente pelo app.js -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contêiner de Toasts (Notificações Flutuantes) -->
+    <div id="toast-container" class="toast-container"></div>
 
     <!-- Scripts -->
     <script src="products.js"></script>
